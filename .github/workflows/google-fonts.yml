@@ -1,0 +1,21 @@
+name: GF
+on:
+  workflow_dispatch:
+  schedule:
+  - cron:  '0 0 * * *'
+jobs:
+  composer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+      - uses: nanasess/setup-php@master
+        with:
+          php-version: '7.2'
+      - run: php ./run.php
+      - name: Commit & Push changes
+        uses: actions-js/push@master
+        with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
